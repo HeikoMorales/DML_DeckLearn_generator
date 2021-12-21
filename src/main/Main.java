@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,6 +15,8 @@ import java.util.Map.Entry;
 
 import model.Card;
 import model.Deck;
+import model.Training;
+import model.Type;
 import model.User;
 
 public class Main {
@@ -32,6 +36,10 @@ public class Main {
 	List<Deck> deckList;
 	Map<Integer, List<Card>> cardMap = new HashMap<Integer, List<Card>>();
 	Map<Integer, List<Integer>> userPurposeMap = new HashMap<Integer, List<Integer>>();
+	Map<Integer, List<Integer>> userDeckMap = new HashMap<Integer, List<Integer>>();
+	List<Training> trainingList = new ArrayList<>();
+	List<Type> typeList = new ArrayList<>();
+	Map<Integer, List<Type>> deckTypeMap = new HashMap<Integer, List<Type>>();
 
 	public Main() {
 		usernameList = new ArrayList<>();
@@ -206,35 +214,31 @@ public class Main {
 		do {
 			List<Integer> tmpList = new ArrayList<>();
 			int tagNum = (int) (1 + (Math.random() * 5));
-			
-			
+
 			for (int i = 0; i < tagNum; i++) {
 				int purposeId = (int) (0 + (Math.random() * PurposeList.size()));
-				tmpList.add(purposeId); //pregun izan carta + deck
+				tmpList.add(purposeId); // pregun izan carta + deck
 			}
-			
+
 			userPurposeMap.put(userId, tmpList);
 			userId++;
 
 		} while (userId != userList.size());
-		
-	}
-	
-	private void printUserPurpouse() {
-		
-		for (Entry<Integer, List<Integer>> entry : userPurposeMap.entrySet()) {	
-			System.out.println("--------------------------------------------------");
-		    System.out.println("userId:"+entry.getKey());
-		    
-		    for (int i = 0; i < entry.getValue().size(); i++) {
-				System.out.println("purposeId: "+entry.getValue().get(i).toString());
-			}
-		}
-		
+
 	}
 
-	
-	
+	private void printUserPurpouse() {
+
+		for (Entry<Integer, List<Integer>> entry : userPurposeMap.entrySet()) {
+			System.out.println("--------------------------------------------------");
+			System.out.println("userId:" + entry.getKey());
+
+			for (int i = 0; i < entry.getValue().size(); i++) {
+				System.out.println("purposeId: " + entry.getValue().get(i).toString());
+			}
+		}
+	}
+
 	/*
 	 * ************************* * Generar Decks * *
 	 ***************************
@@ -286,21 +290,21 @@ public class Main {
 	}
 
 	private void createCards() {
-		
+
 		int deckId = 0;
 
 		do {
 			List<Card> tmpList = new ArrayList<>();
 			int CardNum = (int) (5 + (Math.random() * 20));
-			
-			
+
 			for (int i = 0; i < CardNum; i++) {
 				int questionId = (int) (0 + (Math.random() * cardQuestionList.size()));
 				int answerId = (int) (0 + (Math.random() * cardAnswerList.size()));
-				Card card = new Card(i, deckId, cardQuestionList.get(questionId), cardAnswerList.get(answerId), "the path");
-				tmpList.add(card); //pregun izan carta + deck
+				Card card = new Card(i, deckId, cardQuestionList.get(questionId), cardAnswerList.get(answerId),
+						"the path");
+				tmpList.add(card); // pregun izan carta + deck
 			}
-			
+
 			cardMap.put(deckId, tmpList);
 			deckId++;
 
@@ -309,15 +313,169 @@ public class Main {
 	}
 
 	private void printCards() {
-		
-		for (Entry<Integer, List<Card>> entry : cardMap.entrySet()) {			
-		    System.out.println(entry.getKey() + ":" );
-		    
-		    for (int i = 0; i < entry.getValue().size(); i++) {
+
+		for (Entry<Integer, List<Card>> entry : cardMap.entrySet()) {
+			System.out.println(entry.getKey() + ":");
+
+			for (int i = 0; i < entry.getValue().size(); i++) {
 				System.out.println(entry.getValue().get(i).toString());
 			}
 		}
+	}
 
+	/*
+	 * ************************* * Generar SavedDecks * *
+	 ***************************
+	 */
+
+	private void generateSavedDecks() {
+
+		int userId = 0;
+
+		do {
+			List<Integer> tmpList = new ArrayList<>();
+			int saveDeckNum = (int) (0 + (Math.random() * 7));
+
+			for (int i = 0; i < saveDeckNum; i++) {
+				int deckId = (int) (0 + (Math.random() * deckList.size()));
+				tmpList.add(deckId);
+			}
+
+			userDeckMap.put(userId, tmpList);
+			userId++;
+
+		} while (userId != deckList.size());
+
+		printSavedDeck();
+
+	}
+
+	private void printSavedDeck() {
+
+		for (Entry<Integer, List<Integer>> entry : userDeckMap.entrySet()) {
+			System.out.println("--------------------------------------------------");
+			System.out.println("userId:" + entry.getKey());
+
+			for (int i = 0; i < entry.getValue().size(); i++) {
+				System.out.println("DeckId: " + entry.getValue().get(i).toString());
+			}
+		}
+	}
+
+	/*
+	 * ************************* * Generar SavedDecks * *
+	 ***************************
+	 */
+
+	private void generateTraining() {
+
+		int trainingNum = (int) (0 + (Math.random() * userList.size()));
+
+		for (int i = 0; i < trainingNum; i++) {
+			int trainingId = (int) (0 + (Math.random() * trainingList.size()));
+			int userId = (int) (0 + (Math.random() * userList.size()));
+			int deckId = (int) (0 + (Math.random() * deckList.size()));
+
+			int day = (int) (1 + (Math.random() * 29));
+			int month = (int) (1 + (Math.random() * 12));
+			int year = (int) (Math.random() * (2021 - 2017)) + 2017;
+
+			LocalDate date = LocalDate.of(year, month, day);
+
+			trainingList.add(new Training(trainingId, userId, deckId, date));
+		}
+
+		printTraingList();
+	}
+
+	private void printTraingList() {
+
+		for (Training training : trainingList) {
+			System.out.println(training.toString());
+		}
+	}
+
+	/*
+	 * ************************* * Generar SavedDecks * *
+	 ***************************
+	 */
+
+	private void generateType() {
+
+		int typeNum = (int) (Math.random() * (descriptionList.size() - 0)) + 0;
+
+		for (int i = 0; i < typeNum; i++) {
+			Type type = new Type(i, descriptionList.get(i));
+			typeList.add(type);
+		}
+
+		prinTypes();
+	}
+
+	private void prinTypes() {
+		for (Type type : typeList) {
+			System.out.println(type.toString());
+		}
+	}
+
+	/*
+	 * ************************* * Generar SavedDecks * *
+	 ***************************
+	 */
+
+	private void generateDeckType() {
+
+		int deckId = 0;
+		do {
+			List<Type> tmpList = new ArrayList<>();
+			int deckrelationNum = (int) (0 + (Math.random() * 7));
+
+			for (int i = 0; i < deckrelationNum; i++) {
+				int typeId = (int) (0 + (Math.random() * typeList.size()));
+				tmpList.add(typeList.get(typeId));
+			}
+			deckTypeMap.put(deckId, tmpList);
+			deckId++;
+
+		} while (deckId != deckList.size());
+
+		printDeckTyoe();
+	}
+
+	private void printDeckTyoe() {
+		for (Entry<Integer, List<Type>> entry : deckTypeMap.entrySet()) {
+			System.out.println("--------------------------------------------------");
+			System.out.println("deckId:" + entry.getKey());
+
+			for (int i = 0; i < entry.getValue().size(); i++) {
+				System.out.println("TypeId: " + entry.getValue().get(i).toString());
+			}
+		}
+	}
+
+	/*
+	 * ************************* * Generar SavedDecks * *
+	 ***************************
+	 */
+
+	private void generateTraining_session() {
+		
+		int trainingNum = (int) (0 + (Math.random() * userList.size())); // TO DO 
+
+		for (int i = 0; i < trainingNum; i++) {
+			int trainingId = (int) (0 + (Math.random() * trainingList.size()));
+			int userId = (int) (0 + (Math.random() * userList.size()));
+			int deckId = (int) (0 + (Math.random() * deckList.size()));
+
+			int day = (int) (1 + (Math.random() * 29));
+			int month = (int) (1 + (Math.random() * 12));
+			int year = (int) (Math.random() * (2021 - 2017)) + 2017;
+
+			LocalDate date = LocalDate.of(year, month, day);
+
+			trainingList.add(new Training(trainingId, userId, deckId, date));
+		}
+		
 	}
 
 	public static void main(String[] args) {
@@ -328,6 +486,11 @@ public class Main {
 		main.generateUserPurpouse(); // Purpose_relation
 		main.generateDecks(); // Decks
 		main.generateCards(); // cards
+		main.generateSavedDecks(); // Saved Decks
+		main.generateTraining(); // trainings
+		main.generateType(); // tags de las cartas
+		main.generateDeckType(); // relaciones de tag
+		main.generateTraining_session();
 	}
 
 }
