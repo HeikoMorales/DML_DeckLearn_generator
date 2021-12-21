@@ -501,6 +501,14 @@ public class Main {
 		main.generateDeckType(); // relaciones de tag
 		main.generateTraining_session();//relacion Training_session
 		
+		main.scriptGenerator();
+		
+	}
+
+	private void scriptGenerator() {
+		String insert = "INSERT INTO mi_tabla (id, nombre, ciudad) VALUES (1, 'Pepito', 'Sevilla');";
+		String insert2 = "INSERT INTO empleados VALUES ('Ana Gomez','22222222','2008/12/31')";
+		
 	}
 
 }

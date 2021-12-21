@@ -8,6 +8,4 @@ public class CardStatistic {
 	LocalDate date;
 	int errorCounter, time;
 	
-	
-	
 }
