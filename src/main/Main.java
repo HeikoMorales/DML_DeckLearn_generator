@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import model.Card;
 import model.Deck;
 import model.Training;
+import model.Training_session;
 import model.Type;
 import model.User;
 
@@ -40,6 +41,7 @@ public class Main {
 	List<Training> trainingList = new ArrayList<>();
 	List<Type> typeList = new ArrayList<>();
 	Map<Integer, List<Type>> deckTypeMap = new HashMap<Integer, List<Type>>();
+	List<Training_session> training_sessionList = new ArrayList<>();
 
 	public Main() {
 		usernameList = new ArrayList<>();
@@ -454,18 +456,15 @@ public class Main {
 	}
 
 	/*
-	 * ************************* * Generar SavedDecks * *
+	 * ************************* * Generar Training_session * *
 	 ***************************
 	 */
 
 	private void generateTraining_session() {
-		
-		int trainingNum = (int) (0 + (Math.random() * userList.size())); // TO DO 
 
-		for (int i = 0; i < trainingNum; i++) {
-			int trainingId = (int) (0 + (Math.random() * trainingList.size()));
-			int userId = (int) (0 + (Math.random() * userList.size()));
-			int deckId = (int) (0 + (Math.random() * deckList.size()));
+		
+		
+		for (int i = 0; i < trainingList.size(); i++) {
 
 			int day = (int) (1 + (Math.random() * 29));
 			int month = (int) (1 + (Math.random() * 12));
@@ -473,9 +472,19 @@ public class Main {
 
 			LocalDate date = LocalDate.of(year, month, day);
 
-			trainingList.add(new Training(trainingId, userId, deckId, date));
+			int trainingId = (int) (0 + (Math.random() * trainingList.size()));
+			
+			Training_session training_session = new Training_session(i, trainingId, date);
+			training_sessionList.add(training_session);
 		}
+		printTrainingSession();
 		
+	}
+
+	private void printTrainingSession() {
+		for (Training_session training_session : training_sessionList) {
+			System.out.println(training_session.toString());
+		}
 	}
 
 	public static void main(String[] args) {
@@ -490,7 +499,8 @@ public class Main {
 		main.generateTraining(); // trainings
 		main.generateType(); // tags de las cartas
 		main.generateDeckType(); // relaciones de tag
-		main.generateTraining_session();
+		main.generateTraining_session();//relacion Training_session
+		
 	}
 
 }
