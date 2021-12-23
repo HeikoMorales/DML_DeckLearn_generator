@@ -14,7 +14,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import model.Card;
+import model.CardResponses;
 import model.Deck;
+import model.DeckRate;
+import model.Result;
 import model.Training;
 import model.Training_session;
 import model.Type;
@@ -42,6 +45,8 @@ public class Main {
 	List<Type> typeList = new ArrayList<>();
 	Map<Integer, List<Type>> deckTypeMap = new HashMap<Integer, List<Type>>();
 	List<Training_session> training_sessionList = new ArrayList<>();
+	List<DeckRate> deckRateList = new ArrayList<>();
+	List<CardResponses> cardStatisticList = new ArrayList<>();
 
 	public Main() {
 		usernameList = new ArrayList<>();
@@ -378,8 +383,8 @@ public class Main {
 			int userId = (int) (0 + (Math.random() * userList.size()));
 			int deckId = (int) (0 + (Math.random() * deckList.size()));
 
-			int day = (int) (1 + (Math.random() * 29));
-			int month = (int) (1 + (Math.random() * 12));
+			int day = (int) (Math.random() * (29 - 1)) + 1;
+			int month = (int) (Math.random() * (12 - 1)) + 1;
 			int year = (int) (Math.random() * (2021 - 2017)) + 2017;
 
 			LocalDate date = LocalDate.of(year, month, day);
@@ -466,8 +471,8 @@ public class Main {
 		
 		for (int i = 0; i < trainingList.size(); i++) {
 
-			int day = (int) (1 + (Math.random() * 29));
-			int month = (int) (1 + (Math.random() * 12));
+			int day = (int) (Math.random() * (29 - 1)) + 1;
+			int month = (int) (Math.random() * (12 - 1)) + 1;
 			int year = (int) (Math.random() * (2021 - 2017)) + 2017;
 
 			LocalDate date = LocalDate.of(year, month, day);
@@ -486,6 +491,67 @@ public class Main {
 			System.out.println(training_session.toString());
 		}
 	}
+	
+	/*
+	 * ************************* * Generar Training_session * *
+	 ***************************
+	 */
+	
+	private void generateDeckRate() {
+		
+		
+		for (int i = 0; i < deckList.size(); i++) {
+			int rate = (int) (Math.random() * (10 - 0)) + 0;
+			
+			DeckRate deckRate = new DeckRate(i, i, rate);
+			deckRateList.add(deckRate);
+		}
+		
+		for (DeckRate deckRate : deckRateList) {
+			System.out.println(deckRate.toString());
+		}
+	}
+	
+	/*
+	 * ************************* * Generar Training_session * *
+	 ***************************
+	 */
+	
+	private void generateCardresponses() {
+		
+		for (int i = 0; i < cardMap.size(); i++) {
+			int time = (int) (Math.random() * (300 - 10)) + 10;
+			CardResponses cardStatistic = new CardResponses(i, i, time);
+			cardStatisticList.add(cardStatistic);
+		}
+		
+		for (CardResponses cardStatistic : cardStatisticList) {
+			System.out.println(cardStatistic.toString());
+		}
+	}
+	
+	/*
+	 * ************************* * Generar Training_session * *
+	 ***************************
+	 */
+	
+	private void generateResults() {
+		List<Result> resultList = new ArrayList<>();
+		
+		for (int i = 0; i < training_sessionList.size(); i++) {
+			int box_number = (int) (Math.random() * (10 - 1)) + 1;
+			int error_number = (int) (Math.random() * (15 - 5)) + 5;
+			int avgResponseTime = (int) (Math.random() * (300 - 10)) + 10;
+			
+			Result result = new Result(i, i, i, box_number, error_number, avgResponseTime);
+			resultList.add(result);
+		}
+		
+		for (Result result : resultList) {
+			System.out.println(result.toString());
+		}
+		
+	}
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -500,8 +566,11 @@ public class Main {
 		main.generateType(); // tags de las cartas
 		main.generateDeckType(); // relaciones de tag
 		main.generateTraining_session();//relacion Training_session
+		main.generateDeckRate();//Deck rate
+		main.generateResults(); //deck result 
+		main.generateCardresponses(); // CardStatistics
 		
-		main.scriptGenerator();
+		//main.scriptGenerator();
 		
 	}
 
